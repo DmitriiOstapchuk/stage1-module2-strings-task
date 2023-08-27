@@ -1,4 +1,6 @@
 package com.epam.mjc;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MethodParser {
 
@@ -20,6 +22,33 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+        String stringArguments = signatureString.substring(signatureString.indexOf('(')+1, signatureString.lastIndexOf(')'));
+        List <MethodSignature.Argument> arguments = new ArrayList<>();
+        if (stringArguments.length() > 0) {
+            String[] stringArray = stringArguments.split(", ");
+            for (int i = 0; i < stringArray.length; i++) {
+                String[] pair = stringArray[i].split(" ");
+                arguments.add(new MethodSignature.Argument(pair[0], pair[1]));
+            }
+        }
+        String moTyNa = signatureString.substring(0, signatureString.indexOf('('));
+        String[] twoOrThree = moTyNa.split(" ");
+        String accessModifier;
+        String returnType;
+        String methodName;
+        if (twoOrThree.length == 3) {
+            accessModifier = twoOrThree[0];
+            returnType = twoOrThree[1];
+            methodName = twoOrThree[2];
+        } else {
+            accessModifier = null;
+            returnType = twoOrThree[0];
+            methodName = twoOrThree[1];
+        }
+        MethodSignature methodSignature = new MethodSignature(methodName, arguments);
+        methodSignature.setAccessModifier(accessModifier);
+        methodSignature.setReturnType(returnType);
+        return methodSignature;
     }
+
 }
